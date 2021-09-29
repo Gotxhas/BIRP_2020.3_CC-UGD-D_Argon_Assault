@@ -1214,8 +1214,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnSpeed: 200
-  xValueToClamp: 23
-  yValueToClamp: 12
+  xValueToClamp: 24
+  yValueToClamp: 18
   positionPitchFactor: -1
   controlPitchFactor: -20
   positionRollFactor: -20
