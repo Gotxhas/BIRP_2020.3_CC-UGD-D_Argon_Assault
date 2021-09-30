@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
@@ -52,5 +53,15 @@ public class PlayerController : MonoBehaviour
 
         //transform.Rotate(Vector3.forward, Time.deltaTime * turnSpeed * horizontalThrow);
         //transform.Rotate(Vector3.right, Time.deltaTime * turnSpeed * verticalThrow);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        print("Player collided Something");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        print("Player Triggered Something");
     }
 }
