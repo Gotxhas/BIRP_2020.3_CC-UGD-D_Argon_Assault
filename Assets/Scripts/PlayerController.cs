@@ -4,23 +4,30 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour
 {
-
-    [SerializeField] private float turnSpeed;
-    [SerializeField] private float xValueToClamp;
-    [SerializeField] private float yValueToClamp;
-    [SerializeField] private float positionPitchFactor = -1f;
-    [SerializeField] private float controlPitchFactor = -20f;
-    [SerializeField] private float positionRollFactor = -20f;
-    [SerializeField] private float positionYawFactor = 2f;
+    [Header("Set In Inspector - General")]
     [Tooltip("In ms^-1")] [SerializeField] private float speed;
+    [SerializeField] private float xRange;
+    [SerializeField] private float yRange;
 
+    [Header("Set In Inspector - Screen-Position Based")]
+    [SerializeField] private float positionPitchFactor = -1f;
+    [SerializeField] private float positionYawFactor = 2f;
+    
+    [Header("Set In Inspector - Control-throw Based")]
+    [SerializeField] private float controlRollFactor = -20f;
+    [SerializeField] private float controlPitchFactor = -20f;
+    
     private float _xThrow, _yThrow;
+    private bool _isControlEnable = true;
     
     // Update is called once per frame
     void Update()
     {
-        ProcessTranslation();
-        ProcessRotation();
+        if (_isControlEnable)
+        {
+            ProcessTranslation();
+            ProcessRotation();
+        }
     }
 
     private void ProcessRotation()
@@ -29,8 +36,7 @@ public class PlayerController : MonoBehaviour
         
         float pitch = localPos.y * positionPitchFactor + _yThrow * controlPitchFactor;
         float yaw = localPos.x * positionYawFactor;
-        //float roll = localPos.x * positionRollFactor + _xThrow * controlRollFactor;
-        float roll = _xThrow * positionRollFactor;
+        float roll = _xThrow * controlRollFactor;
         transform.localRotation = Quaternion.Euler(pitch,yaw,roll);
     }
 
@@ -43,25 +49,18 @@ public class PlayerController : MonoBehaviour
 
         float yOffset = _yThrow * speed * Time.deltaTime;
         float rawYPos = localPos.y + yOffset;
-        float clampedYPos = Mathf.Clamp(rawYPos, -yValueToClamp, yValueToClamp);
+        float clampedYPos = Mathf.Clamp(rawYPos, -yRange, yRange);
 
         float xOffset = _xThrow * speed * Time.deltaTime;
         float rawXPos = localPos.x + xOffset;
-        float clampedXPos = Mathf.Clamp(rawXPos, -xValueToClamp, xValueToClamp);
+        float clampedXPos = Mathf.Clamp(rawXPos, -xRange, xRange);
 
         transform.localPosition = new Vector3(clampedXPos, clampedYPos, localPos.z);
-
-        //transform.Rotate(Vector3.forward, Time.deltaTime * turnSpeed * horizontalThrow);
-        //transform.Rotate(Vector3.right, Time.deltaTime * turnSpeed * verticalThrow);
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnPlayerDeath() //called by string reference
     {
-        print("Player collided Something");
+        _isControlEnable = false;
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        print("Player Triggered Something");
-    }
+    
 }
