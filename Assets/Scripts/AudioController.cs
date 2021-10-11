@@ -3,11 +3,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MusicPlayerController : MonoBehaviour
+public class AudioController : MonoBehaviour
 {
     private void Awake()
     {
-        int numMusicPlayers = FindObjectsOfType<MusicPlayerController>().Length;
+        int numMusicPlayers = FindObjectsOfType<AudioController>().Length;
 
         if (numMusicPlayers > 1)
         {
