@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
@@ -8,7 +7,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("In ms^-1")] [SerializeField] private float speed;
     [SerializeField] private float xRange;
     [SerializeField] private float yRange;
-
+    [SerializeField] private ParticleSystem[] guns;
+    
     [Header("Set In Inspector - Screen-Position Based")]
     [SerializeField] private float positionPitchFactor = -1f;
     [SerializeField] private float positionYawFactor = 2f;
@@ -27,9 +27,10 @@ public class PlayerController : MonoBehaviour
         {
             ProcessTranslation();
             ProcessRotation();
+            ProcessFiring();
         }
     }
-
+    
     private void ProcessRotation()
     {
         Vector3 localPos = transform.localPosition;
@@ -57,7 +58,33 @@ public class PlayerController : MonoBehaviour
 
         transform.localPosition = new Vector3(clampedXPos, clampedYPos, localPos.z);
     }
+    
+    private void ProcessFiring()
+    {
+        if (CrossPlatformInputManager.GetButton("Fire1"))
+        {
 
+            SetGunsActive(true);
+
+        }
+
+        else
+        {
+            SetGunsActive(false);
+        }
+    }
+    
+    private void SetGunsActive(bool isActive)
+    {
+        foreach (var gun in guns)
+        {
+            var emission = gun.emission;
+            emission.enabled = isActive;
+        }
+    }
+    
+
+    
     private void OnPlayerDeath() //called by string reference
     {
         _isControlEnable = false;

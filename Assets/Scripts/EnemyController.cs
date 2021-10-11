@@ -6,10 +6,17 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private Transform spawnerParent;
     [SerializeField] private int scorePoint;
+    [SerializeField] private int healthPoints;
+    
     
     private void OnParticleCollision(GameObject other)
     {
-        EnemyHit();
+        healthPoints--;
+        
+        if (healthPoints <= 0)
+        {
+            EnemyHit();
+        }
     }
 
     private void EnemyHit()
